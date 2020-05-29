@@ -9,11 +9,12 @@
       <div class="sk-chase-dot"></div>
     </div>
 
+    <PokemonSearch v-on:search="search" />
     <div class="pokemons" v-if="pokemons.length > 0 && !isLoading">
       <article
         v-for="(pokemon, index) in pokemons"
         :key="'poke' + index"
-        @click="sendPokemonDetail(pokemon.id, pokemon.img)"
+        @click="sendPokemonDetail(pokemon.id)"
       >
         <img :src="pokemon.img" :alt="pokemon.name" height="96" width="96" />
         <h3>{{ pokemon.name }}</h3>
@@ -43,10 +44,12 @@
 
 <script>
 import Pokemon from '@/components/Pokemon.vue';
+import PokemonSearch from '@/components/PokemonSearch.vue';
 export default {
   name: 'Pokemons',
   components: {
     Pokemon,
+    PokemonSearch,
   },
   data: () => {
     return {
@@ -101,6 +104,10 @@ export default {
         });
     },
 
+    search(value) {
+      this.sendPokemonDetail(value);
+    },
+
     next() {
       this.currentUrl = this.nextPageUrl;
       this.fetchPokemonData();
@@ -111,9 +118,8 @@ export default {
       this.currentUrl = this.previousPageUrl;
       this.fetchPokemonData();
     },
-    sendPokemonDetail(id, img) {
+    sendPokemonDetail(id) {
       this.pokemonUrl = `${this.apiUrl}${id}`;
-      this.pokemonImg = img;
       this.showDetail = true;
     },
 

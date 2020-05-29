@@ -1,6 +1,9 @@
 <template>
   <main class="backdrop">
-    <article class="detail" v-if="pokemonData">
+    <article
+      class="detail"
+      v-if="pokemonData !== null && !isLoading && objectHasData(pokemonData)"
+    >
       <div class="image">
         <img :src="pokemonImg" :alt="pokemonData.name" />
       </div>
@@ -70,7 +73,8 @@
         <progress id="speed" :value="speed" max="100"></progress>
       </div>
     </article>
-    <article v-else>
+    <article class="error-msg" v-if="!objectHasData(pokemonData)">
+      <h2 class="error">Error!</h2>
       <h2>This pokemon was not found</h2>
     </article>
     <button class="close-btn" @click="$emit('closeDetail')">
@@ -87,26 +91,23 @@ export default {
       type: String,
       required: true,
     },
-    pokemonImg: {
-      type: String,
-      required: true,
-    },
   },
   data: () => {
     return {
       pokemonData: {},
       baseStats: [],
+      pokemonImg: '',
+      isLoading: false,
       hp: '',
       attack: '',
       defense: '',
       speed: '',
-      specialAttack: '',
-      specialDefense: '',
     };
   },
   methods: {
     fetchPokemonData() {
       if (!this.pokemonUrl !== null) {
+        this.isLoading = true;
         fetch(this.pokemonUrl)
           .then((res) => {
             if (res.status === 200) {
@@ -116,6 +117,7 @@ export default {
           .then((data) => {
             if (data) {
               this.pokemonData = data;
+              this.pokemonImg = data.sprites.front_default;
               this.baseStats = [...data['stats']];
               this.baseStats.map((stat) => {
                 switch (stat.stat.name) {
@@ -138,10 +140,22 @@ export default {
                     this.specialDefense = stat['base_stat'];
                     break;
                 }
+                this.isLoading = false;
                 return this.baseStats;
               });
             }
+          })
+          .catch((error) => {
+            this.isLoading = false;
+            this.pokemonData = null;
+            console.log('error: ', error);
           });
+      }
+    },
+
+    objectHasData(obj) {
+      if (Object.keys(obj).length > 0) {
+        return true;
       }
     },
   },
@@ -285,6 +299,16 @@ h3 {
   padding: 0.1rem;
 }
 
+.error-msg {
+  background: #fff;
+  color: #333;
+  padding: 1rem;
+}
+.error {
+  color: red;
+  text-align: center;
+  font-weight: bold;
+}
 @media screen and (max-width: 640px) {
   .backdrop .detail {
     width: 100vw;
