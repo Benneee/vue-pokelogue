@@ -24,6 +24,7 @@
   justify-content: center;
   align-items: center;
   background-image: url('http://pngimg.com/uploads/pokemon/pokemon_PNG33.png');
+  background-position: center;
   background-repeat: no-repeat;
 }
 
@@ -37,8 +38,17 @@
   background-color: rgb(243, 235, 235);
 }
 
+.card h1 {
+  border-bottom: 3px solid rgb(206, 48, 48);
+  margin-bottom: 1.5rem;
+}
+
 .card:hover {
   box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+p a {
+  color: rgb(206, 48, 48);
 }
 
 @media screen and (max-width: 648px) {
