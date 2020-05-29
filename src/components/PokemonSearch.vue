@@ -1,7 +1,12 @@
 <template>
   <div class="search-area">
     <form>
-      <input type="text" v-model="searchValue" required />
+      <input
+        type="text"
+        v-model="searchValue"
+        placeholder="Enter pokemon name"
+        required
+      />
       <i
         class="fas fa-search"
         @click.prevent="$emit('search', searchValue)"
