@@ -9,8 +9,13 @@
       <div class="sk-chase-dot"></div>
     </div>
 
+    <PokemonSearch v-on:search="search" />
     <div class="pokemons" v-if="pokemons.length > 0 && !isLoading">
-      <article v-for="(pokemon, index) in pokemons" :key="'poke' + index">
+      <article
+        v-for="(pokemon, index) in pokemons"
+        :key="'poke' + index"
+        @click="sendPokemonDetail(pokemon.id)"
+      >
         <img :src="pokemon.img" :alt="pokemon.name" height="96" width="96" />
         <h3>{{ pokemon.name }}</h3>
       </article>
@@ -27,18 +32,33 @@
         <h3>No results to display</h3>
       </article>
     </div>
+
+    <Pokemon
+      v-if="showDetail"
+      :pokemonUrl="pokemonUrl"
+      :pokemonImg="pokemonImg"
+      v-on:closeDetail="closeDetail"
+    />
   </div>
 </template>
 
 <script>
+import Pokemon from '@/components/Pokemon.vue';
+import PokemonSearch from '@/components/PokemonSearch.vue';
 export default {
   name: 'Pokemons',
-  components: {},
+  components: {
+    Pokemon,
+    PokemonSearch,
+  },
   data: () => {
     return {
       nextPageUrl: '',
       previousPageUrl: '',
+      pokemonUrl: '',
       currentUrl: '',
+      pokemonImg: '',
+      showDetail: false,
       isLoading: false,
       previousPageAvailable: false,
       pokemons: [],
@@ -73,6 +93,7 @@ export default {
             return {
               name: pokemon.name,
               img: `${this.imageUrl}${this.getPokemonId(pokemon.url)}.png`,
+              id: this.getPokemonId(pokemon.url),
             };
           });
           this.isLoading = false;
@@ -81,6 +102,10 @@ export default {
           console.log('error: ', error);
           this.isLoading = false;
         });
+    },
+
+    search(value) {
+      this.sendPokemonDetail(value);
     },
 
     next() {
@@ -92,6 +117,15 @@ export default {
     previous() {
       this.currentUrl = this.previousPageUrl;
       this.fetchPokemonData();
+    },
+    sendPokemonDetail(id) {
+      this.pokemonUrl = `${this.apiUrl}${id}`;
+      this.showDetail = true;
+    },
+
+    closeDetail() {
+      this.showDetail = false;
+      this.pokemonUrl = null;
     },
   },
 
