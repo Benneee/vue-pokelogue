@@ -186,7 +186,7 @@ export default {
   align-items: center;
   flex-direction: column;
   position: relative;
-  bottom: 2rem;
+  bottom: 3.5rem;
   padding: 1.5rem;
   width: 30vw;
   border-radius: 5px;
@@ -312,6 +312,7 @@ h3 {
 @media screen and (max-width: 640px) {
   .backdrop .detail {
     width: 100vw;
+    bottom: 1.3rem;
   }
 
   .close-btn {
