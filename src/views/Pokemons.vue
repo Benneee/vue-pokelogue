@@ -9,7 +9,7 @@
       <div class="sk-chase-dot"></div>
     </div>
 
-    <PokemonSearch v-on:search="search" />
+    <PokemonSearch v-if="!isLoading" v-on:search="search" />
     <div class="pokemons" v-if="pokemons.length > 0 && !isLoading">
       <article
         v-for="(pokemon, index) in pokemons"

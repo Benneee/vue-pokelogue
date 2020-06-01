@@ -1,9 +1,6 @@
 <template>
   <main class="backdrop">
-    <article
-      class="detail"
-      v-if="pokemonData !== null && !isLoading && objectHasData(pokemonData)"
-    >
+    <article class="detail" v-if="!isLoading && objectHasData(pokemonData)">
       <div class="image">
         <img :src="pokemonImg" :alt="pokemonData.name" />
       </div>
@@ -73,7 +70,7 @@
         <progress id="speed" :value="speed" max="100"></progress>
       </div>
     </article>
-    <article class="error-msg" v-if="!objectHasData(pokemonData)">
+    <article class="error-msg" v-else>
       <h2 class="error">Error!</h2>
       <h2>This pokemon was not found</h2>
     </article>
@@ -112,6 +109,8 @@ export default {
           .then((res) => {
             if (res.status === 200) {
               return res.json();
+            } else {
+              this.pokemonData = null;
             }
           })
           .then((data) => {
@@ -187,6 +186,7 @@ export default {
   align-items: center;
   flex-direction: column;
   position: relative;
+  bottom: 2rem;
   padding: 1.5rem;
   width: 30vw;
   border-radius: 5px;
