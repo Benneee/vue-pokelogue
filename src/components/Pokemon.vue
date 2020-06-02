@@ -1,6 +1,10 @@
 <template>
   <main class="backdrop">
-    <article class="detail" v-if="!isLoading && objectHasData(pokemonData)">
+    <article class="error-msg" v-if="pokemonData === null && !isLoading">
+      <h2 class="error">Error!</h2>
+      <h2>This pokemon was not found</h2>
+    </article>
+    <article class="detail" v-else>
       <div class="image">
         <img :src="pokemonImg" :alt="pokemonData.name" />
       </div>
@@ -70,10 +74,6 @@
         <progress id="speed" :value="speed" max="100"></progress>
       </div>
     </article>
-    <article class="error-msg" v-else>
-      <h2 class="error">Error!</h2>
-      <h2>This pokemon was not found</h2>
-    </article>
     <button class="close-btn" @click="$emit('closeDetail')">
       X
     </button>
@@ -104,7 +104,6 @@ export default {
   methods: {
     fetchPokemonData() {
       if (!this.pokemonUrl !== null) {
-        this.isLoading = true;
         fetch(this.pokemonUrl)
           .then((res) => {
             if (res.status === 200) {
@@ -114,6 +113,7 @@ export default {
             }
           })
           .then((data) => {
+            this.isLoading = true;
             if (data) {
               this.pokemonData = data;
               this.pokemonImg = data.sprites.front_default;
@@ -139,10 +139,10 @@ export default {
                     this.specialDefense = stat['base_stat'];
                     break;
                 }
-                this.isLoading = false;
                 return this.baseStats;
               });
             }
+            this.isLoading = false;
           })
           .catch((error) => {
             this.isLoading = false;
@@ -153,8 +153,10 @@ export default {
     },
 
     objectHasData(obj) {
-      if (Object.keys(obj).length > 0) {
-        return true;
+      if (obj !== null || obj !== undefined) {
+        if (Object.keys(obj).length > 0) {
+          return true;
+        }
       }
     },
   },
