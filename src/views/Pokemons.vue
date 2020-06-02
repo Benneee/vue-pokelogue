@@ -105,7 +105,11 @@ export default {
     },
 
     search(value) {
-      this.sendPokemonDetail(value);
+      if (value !== '') {
+        this.sendPokemonDetail(value);
+      } else {
+        alert('Enter a search value');
+      }
     },
 
     next() {
@@ -125,7 +129,7 @@ export default {
 
     closeDetail() {
       this.showDetail = false;
-      this.pokemonUrl = null;
+      this.pokemonUrl = '';
     },
   },
 

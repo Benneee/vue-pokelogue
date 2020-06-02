@@ -154,7 +154,7 @@ export default {
     },
     closeDetail() {
       this.showDetail = false;
-      this.pokemonUrl = null;
+      this.pokemonUrl = '';
     },
   },
   created() {
